@@ -84,17 +84,25 @@
                     surveyScorecardResource: defineResource(apiVer + "/surveys/:surveyId/scorecards", {surveyId: '@surveyId'}, { 
                         post: {method: 'POST', params: {}, isArray: false}                       
                     }),
-
                     groupResource: defineResource(apiVer + "/groups/:groupId/:anotherresource", {groupId: '@groupId', anotherresource: '@anotherresource'}, {
                         get: {method: 'GET', params: {}},
                         getAllGroups: {method: 'GET', params: {}, isArray: true},
                         update: { method: 'PUT'}
+                    }),
+                    groupClients: defineResource(apiVer + "/groups/:groupId", {groupId: '@groupId', associations: '@associations'}, {
+                        get:{method:'GET',params: {}}
                     }),
                     groupSummaryResource: defineResource(apiVer + "/runreports/:reportSource", {reportSource: '@reportSource'}, {
                         getSummary: {method: 'GET', params: {}}
                     }),
                     groupAccountResource: defineResource(apiVer + "/groups/:groupId/accounts", {groupId: '@groupId'}, {
                         getAll: {method: 'GET', params: {}}
+                    }),
+                    groupGSIMAccountResource: defineResource(apiVer + "/groups/:groupId/gsimaccounts", {groupId: '@groupId',parentGSIMAccountNo: '@parentGSIMAccountNo'}, {
+                        get: {method: 'GET', params: {},isArray:true}
+                    }),
+                    groupGLIMAccountResource: defineResource(apiVer + "/groups/:groupId/glimaccounts", {groupId: '@groupId',parentLoanAccountNo:'@parentLoanAccountNo'}, {
+                        get: {method: 'GET', params: {},isArray: true}
                     }),
                     groupNotesResource: defineResource(apiVer + "/groups/:groupId/notes/:noteId", {groupId: '@groupId', noteId: '@noteId'}, {
                         getAllNotes: {method: 'GET', params: {}, isArray: true}
@@ -191,6 +199,13 @@
                     LoanAccountResource: defineResource(apiVer + "/loans/:loanId/:resourceType/:chargeId", {loanId: '@loanId', resourceType: '@resourceType', chargeId: '@chargeId'}, {
                         getLoanAccountDetails: {method: 'GET', params: {}},
                         update: {method: 'PUT'}
+                    }),
+                    glimLoan: defineResource(apiVer + "/loans/glimAccount/:glimId", {glimId:'@glimId',command: '@command'}, {
+                        post: {method: 'POST', params: {}}
+
+                    }),
+                    glimLoanTemplate: defineResource(apiVer + "/loans/glimAccount/:glimId", {glimId:'@glimId'}, {
+                       get:{method:'GET',params: {},isArray: true}
                     }),
                     LoanEditDisburseResource: defineResource(apiVer + "/loans/:loanId/disbursements/:disbursementId", {loanId: '@loanId', disbursementId: '@disbursementId'}, {
                         getLoanAccountDetails: {method: 'GET', params: {}},
@@ -318,6 +333,13 @@
                         get: {method: 'GET', params: {}},
                         getAllNotes: {method: 'GET', params: {}, isArray: true},
                         update: {method: 'PUT'}
+                    }),
+                    gsimResource: defineResource(apiVer + "/savingsaccounts/gsim/:parentAccountId", {parentAccountId:'@parentAccountId'}, {
+                        post: {method: 'POST', params: {}},
+                        update: {method: 'PUT'}
+                    }),
+                    gsimCommandsResource: defineResource(apiVer + "/savingsaccounts/gsimcommands/:parentAccountId", {parentAccountId:'@parentAccountId',command:'@command'}, {
+                        post: {method: 'POST', params: {}}
                     }),
                     savingsChargeResource: defineResource(apiVer + "/savingsaccounts/:accountId/charges/:resourceType", {accountId: '@accountId', resourceType: '@resourceType'}, {
                         get: {method: 'GET', params: {}},

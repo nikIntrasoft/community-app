@@ -288,6 +288,13 @@ define(['Q', 'underscore', 'mifosX'], function (Q) {
             'organization/smscampaigns/ViewSmsCampaignController',
             'organization/smscampaigns/EditSmsCampaignController',
             'organization/entitydatatablechecks/EntityDatatableChecksController',
+            'loanAccount/NewGLIMAccountController',
+            'loanAccount/ViewGLIMaccountController',
+            'loanAccount/GLIMLoanAccountActionsController',
+            'savings/CreateGSIMAccountController',
+            'savings/ViewGSIMaccountController',
+            'savings/GSIMAccountActionsController',
+            'savings/EditGSIMAccountController'
         ],
         filters: [
             'StatusLookup',

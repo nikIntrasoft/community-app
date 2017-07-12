@@ -3,6 +3,8 @@
         ViewGroupController: function (scope, routeParams, route, location, resourceFactory, dateFilter, $modal) {
             scope.group = [];
             scope.template = [];
+            scope.groupGLIMAccounts=[];
+            scope.groupGSIMAccounts=[];
             scope.formData = {};
             scope.choice = 0;
             scope.staffData = {};
@@ -10,8 +12,18 @@
             scope.openSaving = true;
             scope.editMeeting = false;
             scope.isGroupMembersAvailable = false;
+            scope.groupId=routeParams.id;
             scope.routeToLoan = function (id) {
                 location.path('/viewloanaccount/' + id);
+            };
+
+
+            scope.routeToGLIMLoan = function (glimAccountNumber) {
+                location.path('/viewglimaccount/' +scope.groupId +'/'+glimAccountNumber);
+            };
+
+            scope.routeToGSIMAccount = function (gsimAccountNumber) {
+                location.path('/viewgsimaccount/' + scope.groupId+'/'+gsimAccountNumber);
             };
             scope.routeToSaving = function (id) {
                 location.path('/viewsavingaccount/' + id);
@@ -42,6 +54,15 @@
             resourceFactory.groupAccountResource.get({groupId: routeParams.id}, function (data) {
                 scope.groupAccounts = data;
             });
+
+            resourceFactory.groupGLIMAccountResource.get({groupId: routeParams.id}, function (data) {
+                scope.groupGLIMAccounts = data;
+            });
+
+            resourceFactory.groupGSIMAccountResource.get({groupId: routeParams.id}, function (data) {
+                scope.groupGSIMAccounts = data;
+            });
+
             resourceFactory.groupNotesResource.getAllNotes({groupId: routeParams.id}, function (data) {
                 scope.groupNotes = data;
             });
