@@ -1,9 +1,9 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        LoanAccountActionsController: function (scope, resourceFactory, location, routeParams, dateFilter) {
+        GLIMLoanAccountActionsController: function (scope, resourceFactory, location, routeParams, dateFilter) {
 
             scope.action = routeParams.action || "";
-            scope.accountId = routeParams.id;
+            scope.accountId = routeParams.id; //loanId
             scope.glimId=routeParams.glimId;
             scope.formData = {};
             scope.showDateField = true;
@@ -18,6 +18,7 @@
             scope.disbursementDetails = [];
             scope.showTrancheAmountTotal = 0;
             scope.processDate = false;
+            var prevLoanAmount;
 
             switch (scope.action) {
                 case "approve":
@@ -31,6 +32,7 @@
                         scope.showApprovalAmount = true;
                         scope.formData.approvedLoanAmount =  data.approvalAmount;
                     });
+
                     resourceFactory.LoanAccountResource.getLoanAccountDetails({loanId: routeParams.id, associations: 'multiDisburseDetails'}, function (data) {
                         scope.expectedDisbursementDate = new Date(data.timeline.expectedDisbursementDate);
                         if(data.disbursementDetails != ""){
@@ -55,6 +57,8 @@
                         scope.showApprovalAmount = true;
                         scope.formData.approvedLoanAmount =  data.approvalAmount;
                     });
+
+
                     resourceFactory.LoanAccountResource.getLoanAccountDetails({loanId: routeParams.id, associations: 'multiDisburseDetails'}, function (data) {
                         scope.expectedDisbursementDate = new Date(data.timeline.expectedDisbursementDate);
                         if(data.disbursementDetails != ""){
@@ -135,7 +139,7 @@
                 case "disbursetosavings":
                     scope.modelName = 'actualDisbursementDate';
                     resourceFactory.loanTrxnsTemplateResource.get({loanId: scope.accountId, command: 'disburseToSavings'}, function (data) {
-                       scope.formData.transactionAmount = data.amount;
+                        scope.formData.transactionAmount = data.amount;
                         scope.formData[scope.modelName] = new Date();
                         if (data.fixedEmiAmount) {
                             scope.formData.fixedEmiAmount = data.fixedEmiAmount;
@@ -533,12 +537,12 @@
                 }else if(scope.action === "adddisbursedetails" || scope.action === "deletedisbursedetails") {
                     this.formData.disbursementData = [];
                     for (var i in  scope.disbursementDetails) {
-                            this.formData.disbursementData.push({
-                                id:scope.disbursementDetails[i].id,
-                                principal: scope.disbursementDetails[i].principal,
-                                expectedDisbursementDate: dateFilter(scope.disbursementDetails[i].expectedDisbursementDate, scope.df),
-                                loanChargeId : scope.disbursementDetails[i].loanChargeId
-                            });
+                        this.formData.disbursementData.push({
+                            id:scope.disbursementDetails[i].id,
+                            principal: scope.disbursementDetails[i].principal,
+                            expectedDisbursementDate: dateFilter(scope.disbursementDetails[i].expectedDisbursementDate, scope.df),
+                            loanChargeId : scope.disbursementDetails[i].loanChargeId
+                        });
                     }
 
                     this.formData.expectedDisbursementDate = dateFilter(scope.expectedDisbursementDate, scope.df);
@@ -572,7 +576,7 @@
 
             scope.$watch('formData.transactionDate',function(){
                 scope.onDateChange();
-             });
+            });
 
             scope.onDateChange = function(){
                 if(scope.processDate) {
@@ -594,7 +598,7 @@
             };
         }
     });
-    mifosX.ng.application.controller('LoanAccountActionsController', ['$scope', 'ResourceFactory', '$location', '$routeParams', 'dateFilter', mifosX.controllers.LoanAccountActionsController]).run(function ($log) {
-        $log.info("LoanAccountActionsController initialized");
+    mifosX.ng.application.controller('GLIMLoanAccountActionsController', ['$scope', 'ResourceFactory', '$location', '$routeParams', 'dateFilter', mifosX.controllers.GLIMLoanAccountActionsController]).run(function ($log) {
+        $log.info("GLIMLoanAccountActionsController initialized");
     });
 }(mifosX.controllers || {}));

@@ -142,11 +142,17 @@
             .when('/viewloanaccount/:id', {
                 templateUrl: 'views/loans/viewloanaccountdetails.html'
             })
+            .when('/viewglimaccount/:groupId/:id', {
+                templateUrl: 'views/loans/viewglimaccount.html'
+            })
             .when('/adjustrepaymentschedule/:accountId', {
                 templateUrl: 'views/loans/AdjustRepaymentSchdule.html'
             })
             .when('/loanaccount/:id/:action', {
                 templateUrl: 'views/loans/loanaccountactions.html'
+            })
+            .when('/glimloanaccount/:id/:action/:glimId', {
+                templateUrl: 'views/loans/glimloanaccountactions.html'
             })
             .when('/loanaccountcharge/:id/:action/:chargeId', {
                 templateUrl: 'views/loans/loanaccountactions.html'

@@ -289,6 +289,8 @@ define(['Q', 'underscore', 'mifosX'], function (Q) {
             'organization/smscampaigns/EditSmsCampaignController',
             'organization/entitydatatablechecks/EntityDatatableChecksController',
             'loanAccount/NewGLIMAccountController',
+            'loanAccount/ViewGLIMaccountController',
+            'loanAccount/GLIMLoanAccountActionsController'
         ],
         filters: [
             'StatusLookup',

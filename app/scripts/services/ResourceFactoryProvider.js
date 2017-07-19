@@ -96,6 +96,9 @@
                     groupAccountResource: defineResource(apiVer + "/groups/:groupId/accounts", {groupId: '@groupId'}, {
                         getAll: {method: 'GET', params: {}}
                     }),
+                    groupGLIMAccountResource: defineResource(apiVer + "/groups/:groupId/glimaccounts", {groupId: '@groupId',loanNumber:'@loanNumber'}, {
+                        get: {method: 'GET', params: {},isArray: true}
+                    }),
                     groupNotesResource: defineResource(apiVer + "/groups/:groupId/notes/:noteId", {groupId: '@groupId', noteId: '@noteId'}, {
                         getAllNotes: {method: 'GET', params: {}, isArray: true}
                     }),
@@ -191,6 +194,9 @@
                     LoanAccountResource: defineResource(apiVer + "/loans/:loanId/:resourceType/:chargeId", {loanId: '@loanId', resourceType: '@resourceType', chargeId: '@chargeId'}, {
                         getLoanAccountDetails: {method: 'GET', params: {}},
                         update: {method: 'PUT'}
+                    }),
+                    glimLoan: defineResource(apiVer + "/loans/glimAccount/:glimId", {glimId:'@glimId',command: '@command'}, {
+                        post: {method: 'POST', params: {}}
                     }),
                     LoanEditDisburseResource: defineResource(apiVer + "/loans/:loanId/disbursements/:disbursementId", {loanId: '@loanId', disbursementId: '@disbursementId'}, {
                         getLoanAccountDetails: {method: 'GET', params: {}},

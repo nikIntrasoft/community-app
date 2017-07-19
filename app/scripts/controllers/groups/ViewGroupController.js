@@ -3,6 +3,7 @@
         ViewGroupController: function (scope, routeParams, route, location, resourceFactory, dateFilter, $modal) {
             scope.group = [];
             scope.template = [];
+            scope.groupGLIMAccounts=[];
             scope.formData = {};
             scope.choice = 0;
             scope.staffData = {};
@@ -12,6 +13,11 @@
             scope.isGroupMembersAvailable = false;
             scope.routeToLoan = function (id) {
                 location.path('/viewloanaccount/' + id);
+            };
+
+
+            scope.routeToGLIMLoan = function (id) {
+                location.path('/viewglimaccount/' + routeParams.id+'/'+id);
             };
             scope.routeToSaving = function (id) {
                 location.path('/viewsavingaccount/' + id);
@@ -41,6 +47,10 @@
             });
             resourceFactory.groupAccountResource.get({groupId: routeParams.id}, function (data) {
                 scope.groupAccounts = data;
+            });
+
+            resourceFactory.groupGLIMAccountResource.get({groupId: routeParams.id}, function (data) {
+                scope.groupGLIMAccounts = data;
             });
             resourceFactory.groupNotesResource.getAllNotes({groupId: routeParams.id}, function (data) {
                 scope.groupNotes = data;
