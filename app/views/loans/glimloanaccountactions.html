@@ -120,6 +120,61 @@
                     </div>
                 </div>
 
+                <div class="form-group" ng-show="showRepaymentTable">
+                    <div >
+
+								      <legend>{{ 'label.heading.repaymentCollection' | translate }}</legend>
+
+                    </div>
+                   <table border="2" class="table-bordered">
+                       <th>
+                           <tr class="graybg">
+                              <th>
+                                 {{ 'label.heading.glimloanAccountNo' | translate }}
+                              </th>
+                               <th>
+                                   {{ 'label.heading.client' | translate }}
+                               </th>
+                               <th>
+                                   {{'label.heading.loanaccount' | translate}}
+                               </th>
+                               <th>
+                                   {{ 'label.heading.repayment' |translate}}
+                               </th>
+
+                           </tr>
+                       </th>
+                       <body>
+                       <tr  ng-repeat="childAccounts in glimRepaymentAccounts">
+                           <td >
+                               <input  type="text" name="glimloanAccountNo" ng-model="repaymentArray[$index].parentAccountNo"
+                                       class="form-control" readonly>
+                              <!-- {{childAccounts.parentAccountNo}}-->
+                           </td>
+                         <td>
+                             <input  type="text" name="clientName" ng-model="repaymentArray[$index].clientName"
+                                     class="form-control" readonly>
+                            <!-- {{childAccounts.clientName}}-->
+                         </td>
+                          <td >
+                             <input  type="text" name="loanAccount" ng-model="repaymentArray[$index].childLoanAccountNo"
+                                      class="form-control" readonly>
+                              <!--{{childAccounts.childLoanAccountNo}}-->
+                          </td>
+                            <td>
+                                <input  type="text" name="repaymentAmount" ng-model="repaymentArray[$index].transactionAmount"
+                                       class="form-control">
+                            </td>
+
+                       </tr>
+
+                       </body>
+
+                   </table>
+
+
+                </div>
+
                 <div class="form-group" ng-show="principalPortion">
                     <label class="control-label col-sm-2" for="principalPortion">{{ 'label.input.principal' | translate}}</label>
 

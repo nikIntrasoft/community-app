@@ -84,7 +84,6 @@
                     surveyScorecardResource: defineResource(apiVer + "/surveys/:surveyId/scorecards", {surveyId: '@surveyId'}, { 
                         post: {method: 'POST', params: {}, isArray: false}                       
                     }),
-
                     groupResource: defineResource(apiVer + "/groups/:groupId/:anotherresource", {groupId: '@groupId', anotherresource: '@anotherresource'}, {
                         get: {method: 'GET', params: {}},
                         getAllGroups: {method: 'GET', params: {}, isArray: true},
@@ -96,7 +95,7 @@
                     groupAccountResource: defineResource(apiVer + "/groups/:groupId/accounts", {groupId: '@groupId'}, {
                         getAll: {method: 'GET', params: {}}
                     }),
-                    groupGLIMAccountResource: defineResource(apiVer + "/groups/:groupId/glimaccounts", {groupId: '@groupId',loanNumber:'@loanNumber'}, {
+                    groupGLIMAccountResource: defineResource(apiVer + "/groups/:groupId/glimaccounts", {groupId: '@groupId',parentLoanAccountNo:'@parentLoanAccountNo'}, {
                         get: {method: 'GET', params: {},isArray: true}
                     }),
                     groupNotesResource: defineResource(apiVer + "/groups/:groupId/notes/:noteId", {groupId: '@groupId', noteId: '@noteId'}, {
@@ -197,6 +196,10 @@
                     }),
                     glimLoan: defineResource(apiVer + "/loans/glimAccount/:glimId", {glimId:'@glimId',command: '@command'}, {
                         post: {method: 'POST', params: {}}
+
+                    }),
+                    glimLoanTemplate: defineResource(apiVer + "/loans/glimAccount/:glimId", {glimId:'@glimId'}, {
+                       get:{method:'GET',params: {},isArray: true}
                     }),
                     LoanEditDisburseResource: defineResource(apiVer + "/loans/:loanId/disbursements/:disbursementId", {loanId: '@loanId', disbursementId: '@disbursementId'}, {
                         getLoanAccountDetails: {method: 'GET', params: {}},

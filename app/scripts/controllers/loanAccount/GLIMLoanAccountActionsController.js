@@ -3,8 +3,9 @@
         GLIMLoanAccountActionsController: function (scope, resourceFactory, location, routeParams, dateFilter) {
 
             scope.action = routeParams.action || "";
-            scope.accountId = routeParams.id; //loanId
+            scope.accountId = routeParams.id; //childloanId
             scope.glimId=routeParams.glimId;
+
             scope.formData = {};
             scope.showDateField = true;
             scope.showNoteField = true;
@@ -18,7 +19,10 @@
             scope.disbursementDetails = [];
             scope.showTrancheAmountTotal = 0;
             scope.processDate = false;
+
             var prevLoanAmount;
+
+
 
             switch (scope.action) {
                 case "approve":
@@ -57,7 +61,6 @@
                         scope.showApprovalAmount = true;
                         scope.formData.approvedLoanAmount =  data.approvalAmount;
                     });
-
 
                     resourceFactory.LoanAccountResource.getLoanAccountDetails({loanId: routeParams.id, associations: 'multiDisburseDetails'}, function (data) {
                         scope.expectedDisbursementDate = new Date(data.timeline.expectedDisbursementDate);
@@ -170,6 +173,69 @@
                     scope.isTransaction = true;
                     scope.showAmountField = true;
                     scope.taskPermissionName = 'REPAYMENT_LOAN';
+                    break;
+                case "glimrepayment":
+                    scope.formData.paymentTypeId=0;
+                    scope.formData.formDataArray=[];
+                    scope.repaymentArray=[];
+                    scope.glimRepaymentAccounts=[];
+                    scope.modelName = 'transactionDate';
+                    resourceFactory.loanTrxnsTemplateResource.get({loanId: scope.accountId, command: 'repayment'}, function (data) {
+                        scope.paymentTypes = data.paymentTypeOptions;
+                        if (data.paymentTypeOptions.length > 0) {
+                            scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;
+                        }
+                       // scope.formData.transactionAmount = data.amount;
+                        scope.formData[scope.modelName] = new Date(data.date) || new Date();
+                        if(data.penaltyChargesPortion>0){
+                            scope.showPenaltyPortionDisplay = true;
+                        }
+                    });
+
+
+                    //scope.repaymentArray=new Array();
+                    resourceFactory.glimLoanTemplate.get({glimId: scope.glimId}, function (data) {
+                        scope.glimRepaymentAccounts = data;
+
+                        if(scope.repaymentArray.length!=0)
+                        {
+                            scope.repaymentArray=[];
+
+                        }
+                        for(i=0;i<scope.glimRepaymentAccounts.length;i++)
+                        {
+                            var temp={};
+                            temp.parentAccountNo=data[i].parentAccountNo;
+                            temp.clientName=data[i].clientName;
+                            temp.childLoanId=data[i].childLoanId;
+                            temp.childLoanAccountNo=data[i].childLoanAccountNo;
+                            resourceFactory.loanTrxnsTemplateResource.get({loanId: data[i].childLoanId, command: 'repayment'}, function (data1) {
+                                if(data1.amount)
+                                {
+                                    temp.transactionAmount=data1.amount;
+
+                                }
+                                else {
+                                    temp.transactionAmount=0;
+                                }
+
+                                //console.log(temp.transactionAmount);
+                            });
+
+                            scope.repaymentArray.push(temp);
+
+                        }
+
+
+                    });
+
+
+                    scope.title = 'label.heading.loanrepayments';
+                    scope.labelName = 'label.input.transactiondate';
+                    scope.isTransaction = true;
+                    scope.showAmountField = false;
+                    scope.taskPermissionName = 'REPAYMENT_LOAN';
+                    scope.showRepaymentTable=true;
                     break;
                 case "prepayloan":
                     scope.modelName = 'transactionDate';
@@ -415,7 +481,7 @@
             }
 
             scope.cancel = function () {
-                location.path('/viewloanaccount/' + routeParams.id);
+                location.path('/viewglimaccount/' + routeParams.id);
             };
 
             scope.addTrancheAmounts = function(){
@@ -554,16 +620,79 @@
                     resourceFactory.LoanAccountResource.delete({loanId: routeParams.id, resourceType: 'charges', chargeId: routeParams.chargeId}, this.formData, function (data) {
                         location.path('/viewloanaccount/' + data.loanId);
                     });
-                } else if(scope.action == "glimApprove")
+                }  else if(scope.action == "Approve"){
+                    this.formData.expectedDisbursementDate = dateFilter(scope.expectedDisbursementDate, scope.df);
+                    if(scope.disbursementDetails != null) {
+                        this.formData.disbursementData = [];
+                        for (var i in  scope.disbursementDetails) {
+                            this.formData.disbursementData.push({
+                                id: scope.disbursementDetails[i].id,
+                                principal: scope.disbursementDetails[i].principal,
+                                expectedDisbursementDate: dateFilter(scope.disbursementDetails[i].expectedDisbursementDate, scope.df),
+                                loanChargeId : scope.disbursementDetails[i].loanChargeId
+                            });
+                        }
+                    }
+                    if(scope.formData.approvedLoanAmount == null){
+                        scope.formData.approvedLoanAmount = scope.showTrancheAmountTotal;
+                    }
+                }
+                else if(scope.action == "glimApprove")
                 {
                     resourceFactory.glimLoan.post({glimId: scope.glimId,command:'approve'},this.formData,function (data) {
-                        location.path('/viewloanaccount/' + data.loanId);
+                        location.path('/viewloanaccount/' + scope.accountId);
                     });
                 }
+
                 else if(scope.action == "glimDisburse"){
                     resourceFactory.glimLoan.post({glimId: scope.glimId,command:'disburse'},this.formData,function (data) {
-                        location.path('/viewloanaccount/' + data.loanId);
+                        location.path('/viewloanaccount/' + scope.accountId);
                     });
+                }else if(scope.action == "undoapproval"){
+
+                    resourceFactory.glimLoan.post({glimId: scope.glimId,command:'undoapproval'},scope.formData,function (data) {
+
+                        location.path('/viewloanaccount/' + scope.accountId);
+                    });
+
+                }else if(scope.action == "undodisbursal"){
+
+                    resourceFactory.glimLoan.post({glimId: scope.glimId,command:"undodisbursal"},scope.formData,function (data) {
+                        location.path('/viewloanaccount/' + scope.accountId);
+                    });
+                }
+               else  if(scope.action=="glimrepayment")
+                {
+
+
+                    scope.formData.formDataArray=[];
+
+                    var j=0;
+                    for(j=0;j<scope.repaymentArray.length;j++)
+                    {
+                        var temp1={};
+                        temp1.paymentTypeId= scope.formData.paymentTypeId;
+                        temp1.transactionAmount=scope.repaymentArray[j].transactionAmount
+                        temp1.transactionDate=  scope.formData['transactionDate'];
+                        temp1.locale = scope.optlang.code;
+                        temp1.dateFormat = scope.df;
+                        temp1.loanId=scope.repaymentArray[j].childLoanId;
+                        scope.formData.formDataArray.push(temp1);
+
+
+
+                    }
+
+
+
+                    resourceFactory.glimLoan.save({glimId: scope.glimId,command:'glimrepayment'}, this.formData, function (data) {
+
+                        location.path('/viewloanaccount/' + scope.accountId);
+
+                    });
+
+
+
                 }
                 else
                 {

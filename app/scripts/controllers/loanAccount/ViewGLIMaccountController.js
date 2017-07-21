@@ -5,8 +5,8 @@
 
 
 
-            var loanAccountNumber=routeParams.id;
-            scope.loanAccountId=routeParams.id;
+            var parentLoanAccountNo=routeParams.id;
+
             scope.groupGLIMAccounts={};
             scope.productName="";
             scope.buttons={};
@@ -49,7 +49,7 @@
                         });
                         break;
                     case "undoapproval":
-                        location.path('/loanaccount/' + accountId + '/undoapproval');
+                        location.path('/glimloanaccount/' + routeParams.id + '/undoapproval/'+ accountId );
                         break;
                     case "disburse":
                         location.path('/glimloanaccount/' + routeParams.id + '/glimDisburse/'+accountId);
@@ -58,10 +58,10 @@
                         location.path('/loanaccount/' + accountId + '/disbursetosavings');
                         break;
                     case "undodisbursal":
-                        location.path('/loanaccount/' + accountId + '/undodisbursal');
+                        location.path('/glimloanaccount/'+ routeParams.id + '/undodisbursal/'+ accountId );
                         break;
                     case "makerepayment":
-                        location.path('/loanaccount/' + accountId + '/repayment');
+                        location.path('/glimloanaccount/' + routeParams.id + '/glimrepayment/'+accountId);
                         break;
                     case "prepayment":
                         location.path('/loanaccount/' + accountId + '/prepayloan');
@@ -115,7 +115,7 @@
 
 
 
-            resourceFactory.groupGLIMAccountResource.get({groupId: routeParams.groupId,loanNumber:loanAccountNumber }, function (data) {
+            resourceFactory.groupGLIMAccountResource.get({groupId: routeParams.groupId,parentLoanAccountNo:parentLoanAccountNo }, function (data) {
                 scope.groupGLIMAccounts = data[0];
              //   scope.loandetails.accountNumber=scope.groupGLIMAccounts.accountNumber;
               scope.productName=data[0].childGLIMAccounts[0].productName;
@@ -159,6 +159,11 @@
                             name: "button.disburse",
                             icon: "icon-flag",
                             taskPermissionName: 'DISBURSE_LOAN'
+                        },
+                        {
+                            name: "button.undoapproval",
+                            icon: "icon-undo",
+                            taskPermissionName: 'APPROVALUNDO_LOAN'
                         }
 
                     ]
@@ -167,6 +172,25 @@
                     };
                 }
 
+                if (data[0].loanStatus === "ACTIVE") {
+
+                    scope.buttons = { singlebuttons: [
+                        {
+                            name: "button.makerepayment",
+                            icon: "icon-dollar",
+                            taskPermissionName: 'REPAYMENT_LOAN'
+                        },
+                        {
+                            name: "button.undodisbursal",
+                            icon: "icon-undo",
+                            taskPermissionName: 'DISBURSALUNDO_LOAN'
+                        }
+
+                    ]
+
+
+                    };
+                }
 
 
 
