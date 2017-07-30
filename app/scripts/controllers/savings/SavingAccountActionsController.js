@@ -62,6 +62,8 @@
                     scope.showDateField = true;
                     scope.showNoteField = false;
                     scope.isTransaction = true;
+                    scope.showvoucherNumberField = true;
+                    scope.showpaymentDescriptionField = true;
                     scope.transactionAmountField = true;
                     scope.showPaymentDetails = false;
                     scope.taskPermissionName = 'DEPOSIT_SAVINGSACCOUNT';
@@ -87,6 +89,8 @@
                     scope.isTransaction = true;
                     scope.transactionAmountField = true;
                     scope.showPaymentDetails = false;
+                    scope.showvoucherNumberField = true;
+                    scope.showpaymentDescriptionField = true;
                     scope.taskPermissionName = 'WITHDRAWAL_SAVINGSACCOUNT';
                     break;
                 case "applyAnnualFees":
@@ -142,6 +146,8 @@
                                 scope.formData.routingCode = data.paymentDetailData.routingCode;
                                 scope.formData.receiptNumber = data.paymentDetailData.receiptNumber;
                                 scope.formData.bankNumber = data.paymentDetailData.bankNumber;
+                                scope.formData.voucherNumber = data.paymentDetailData.voucherNumber;
+                                scope.formData.paymentDescription = data.paymentDetailData.paymentDescription;
                             }
                         });
                     scope.showDateField = true;
@@ -149,6 +155,8 @@
                     scope.isTransaction = true;
                     scope.transactionAmountField = true;
                     scope.showPaymentDetails = false;
+                    scope.showvoucherNumberField = true;
+                    scope.showpaymentDescriptionField = true;
                     scope.taskPermissionName = 'ADJUSTTRANSACTION_SAVINGSACCOUNT';
                     break;
                 case "editsavingcharge":
