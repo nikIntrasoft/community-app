@@ -18,6 +18,30 @@
                 </div>
             </div>
 
+                <div class="form-group" ng-show="showvoucherNumberField">
+                        <label class="control-label col-sm-2" for="voucherNumber">{{ 'label.input.voucherNumber' | translate}}<span class="required">*</span></label>
+
+                        <div class="col-sm-3">
+                            <input type="text" id="voucherNumber"  name="voucherNumber" ng-model="formData.voucherNumber" class="form-control" required late-Validate/>
+                        </div>
+                            
+                    <div class="col-sm-3">
+                        <form-validate valattributeform="savingccountactionform" valattribute="voucherNumber"/>
+                    </div>
+                 </div>
+
+
+                <div class="form-group" ng-show="showpaymentDescriptionField">
+                        <label class="control-label col-sm-2" for="paymentDescription">{{ 'label.input.paymentDescription' | translate}}</label>
+
+                        <div class="col-sm-6">
+                            <input id="paymentDescription" type="text" name="paymentDescription" ng-model="formData.paymentDescription" class="form-control"/>
+                        </div>
+                    <div class="col-sm-6">
+                        <form-validate valattributeform="savingccountactionform" valattribute="paymentDescription"/>
+                    </div>
+                </div>
+
             <div class="form-group" data-ng-show="withdrawBalance">
                 <label class="control-label col-sm-2" for="withdrawBalance">{{ 'label.input.withdrawBalance' |
                     translate}}<span class="required">*</span></label>
