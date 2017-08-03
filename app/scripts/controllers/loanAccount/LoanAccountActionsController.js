@@ -120,6 +120,8 @@
                     scope.labelName = 'label.input.transactiondate';
                     scope.isTransaction = true;
                     scope.showAmountField = true;
+                    scope.showvoucherNumberField =true;
+                    scope.showpaymentDescriptionField =true;
                     scope.taskPermissionName = 'REPAYMENT_LOAN';
                     break;
                 case "prepayloan":
@@ -142,6 +144,8 @@
                     scope.labelName = 'label.input.transactiondate';
                     scope.isTransaction = true;
                     scope.showAmountField = true;
+                    scope.showvoucherNumberField =true;
+                    scope.showpaymentDescriptionField =true;
                     scope.taskPermissionName = 'REPAYMENT_LOAN';
                     scope.action = 'repayment';
                     break;
@@ -212,11 +216,15 @@
                                 scope.formData.routingCode = data.paymentDetailData.routingCode;
                                 scope.formData.receiptNumber = data.paymentDetailData.receiptNumber;
                                 scope.formData.bankNumber = data.paymentDetailData.bankNumber;
+                                scope.formData.voucherNumber = data.paymentDetailData.voucherNumber;
+                                scope.formData.paymentDescription = data.paymentDetailData.paymentDescription;
                             }
                         });
                     scope.showDateField = true;
                     scope.showNoteField = false;
                     scope.showAmountField = true;
+                    scope.showvoucherNumberField =true;
+                    scope.showpaymentDescriptionField =true;
                     scope.isTransaction = true;
                     scope.showPaymentDetails = false;
                     scope.taskPermissionName = 'ADJUST_LOAN';

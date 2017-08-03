@@ -39,6 +39,16 @@
                         <td>{{ 'label.heading.date' | translate}}</td>
                         <td>{{transaction.date | DateFormat}}</td>
                     </tr>
+                       
+            <tr>
+                <td>{{ 'label.heading.voucherNumber' | translate}}</td>
+                <td>{{transaction.paymentDetailData.voucherNumber}}</td>
+            </tr>
+            <tr>
+                <td>{{ 'label.heading.paymentDescription' | translate}}</td>
+                <td>{{transaction.paymentDetailData.paymentDescription}}</td>
+            </tr>
+
                     <tr>
                         <td>{{ 'label.heading.currency' | translate}}</td>
                         <td>{{transaction.currency.name}}</td>

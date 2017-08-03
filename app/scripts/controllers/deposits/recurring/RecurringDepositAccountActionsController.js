@@ -154,6 +154,8 @@
                                 scope.formData.routingCode = data.paymentDetailData.routingCode;
                                 scope.formData.receiptNumber = data.paymentDetailData.receiptNumber;
                                 scope.formData.bankNumber = data.paymentDetailData.bankNumber;
+                                scope.formData.voucherNumber = data.paymentDetailData.voucherNumber;
+                                scope.formData.paymentDescription = data.paymentDetailData.paymentDescription;
                             }
                         });
                     scope.showDateField = true;
