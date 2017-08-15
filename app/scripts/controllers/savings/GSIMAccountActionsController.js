@@ -1,10 +1,10 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        SavingAccountActionsController: function (scope, resourceFactory, location, routeParams, dateFilter) {
+        GSIMAccountActionsController: function (scope, resourceFactory, location, routeParams, dateFilter) {
 
             scope.action = routeParams.action || "";
-            scope.accountId = routeParams.id;
-            scope.savingAccountId = routeParams.id;
+            scope.accountId = routeParams.childId;
+            scope.parentAccountId = routeParams.parentId;
             scope.formData = {};
             scope.restrictDate = new Date();
             // Transaction UI Related
@@ -62,6 +62,42 @@
                     scope.showDateField = true;
                     scope.showNoteField = false;
                     scope.isTransaction = true;
+                    scope.transactionAmountField = true;
+                    scope.showPaymentDetails = false;
+                    scope.taskPermissionName = 'DEPOSIT_SAVINGSACCOUNT';
+                    break;
+                case "gsimDeposit":
+                    scope.depositArray=[];
+                    scope.showDepositTable=true;
+                    scope.parentGSIM=[];
+                    resourceFactory.savingsTrxnsTemplateResource.get({savingsId: scope.accountId}, function (data) {
+                        scope.paymentTypes = data.paymentTypeOptions;
+                    });
+                    resourceFactory.groupGSIMAccountResource.get({groupId: 2,parentGSIMId:scope.parentAccountId}, function (data) {
+                        scope.gsimAccounts = data[0].childGSIMAccounts;
+                        scope.parentGSIM=data[0];
+
+                        if(scope.depositArray.length!=0)
+                        {
+                            scope.depositArray=[];
+
+                        }
+                        for(i=0;i<scope.gsimAccounts.length;i++)
+                        {
+
+                            var temp={};
+                            temp.accountNo=scope.gsimAccounts[i].accountNo;
+                            temp.accountBalance=scope.gsimAccounts[i].accountBalance;
+                            scope.depositArray.push(temp);
+
+                        }
+                    });
+                    scope.title = 'label.heading.depositmoneytosavingaccount';
+                    scope.labelName = 'label.input.transactiondate';
+                    scope.modelName = 'transactionDate';
+                    scope.showDateField = true;
+                    scope.showNoteField = false;
+                    scope.isTransaction = true;
                     scope.showvoucherNumberField = false;
                     scope.showpaymentDescriptionField = false;
                     scope.transactionAmountField = true;
@@ -70,7 +106,7 @@
                     break;
                 case "postInterestAsOn":
                     resourceFactory.savingsTrxnsTemplateResource.get({savingsId: scope.accountId}, function (data) {
-                       scope.accountnumber=data.accountNo;
+                        scope.accountnumber=data.accountNo;
                     });
                     scope.labelName = 'label.input.transactiondate';
                     scope.modelName = 'transactionDate';
@@ -89,8 +125,6 @@
                     scope.isTransaction = true;
                     scope.transactionAmountField = true;
                     scope.showPaymentDetails = false;
-                    scope.showvoucherNumberField = true;
-                    scope.showpaymentDescriptionField = true;
                     scope.taskPermissionName = 'WITHDRAWAL_SAVINGSACCOUNT';
                     break;
                 case "applyAnnualFees":
@@ -146,8 +180,6 @@
                                 scope.formData.routingCode = data.paymentDetailData.routingCode;
                                 scope.formData.receiptNumber = data.paymentDetailData.receiptNumber;
                                 scope.formData.bankNumber = data.paymentDetailData.bankNumber;
-                                scope.formData.voucherNumber = data.paymentDetailData.voucherNumber;
-                                scope.formData.paymentDescription = data.paymentDetailData.paymentDescription;
                             }
                         });
                     scope.showDateField = true;
@@ -155,8 +187,6 @@
                     scope.isTransaction = true;
                     scope.transactionAmountField = true;
                     scope.showPaymentDetails = false;
-                    scope.showvoucherNumberField = true;
-                    scope.showpaymentDescriptionField = true;
                     scope.taskPermissionName = 'ADJUSTTRANSACTION_SAVINGSACCOUNT';
                     break;
                 case "editsavingcharge":
@@ -213,15 +243,52 @@
             }
 
             scope.cancel = function () {
-                location.path('/viewsavingaccount/' + routeParams.id);
+                location.path('/viewsavingaccount/' + routeParams.childId);
             };
 
             scope.submit = function () {
+
+                scope.savingsArray=[];
+                scope.childAccounts=[];
+
                 var params = {command: scope.action};
-                if (scope.action != "undoapproval") {
+                if (scope.action != "undoapproval" && scope.action!="gsimDeposit") {
                     this.formData.locale = scope.optlang.code;
                     this.formData.dateFormat = scope.df;
                 }
+
+
+                if(scope.action=="gsimDeposit")
+                {
+
+                    for(var j=0;j<scope.gsimAccounts.length;j++)
+                    {
+                        var temp={};
+                        temp.locale = scope.optlang.code;
+                        temp.dateFormat = scope.df;
+                        temp.transactionDate=dateFilter(this.formData.transactionDate, scope.df);
+                        temp.transactionAmount=scope.depositArray[j].transactionAmount;
+                        scope.childAccounts.push(scope.gsimAccounts[j].id);
+                        if(temp.transactionAmount!=0 )
+                        {
+                            scope.savingsArray.push(temp);
+                        }
+
+                    }
+
+                    params.savingsId=scope.parentAccountId;
+                    this.formData.savingsArray=scope.savingsArray;
+                    this.formData.childAccounts=scope.childAccounts;
+
+                    resourceFactory.savingsTrxnsResource.save(params, this.formData, function (data) {
+
+                        location.path('/viewgsimaccount/' + scope.parentGSIM.groupId+'/'+scope.parentGSIM.accountNumber);
+
+                    });
+
+
+                }
+                else
                 if (scope.action == "deposit" || scope.action == "withdrawal" || scope.action == "modifytransaction" || scope.action=="postInterestAsOn") {
                     if (scope.action == "withdrawal") {
                         if (this.formData.transactionDate) {
@@ -274,11 +341,13 @@
                         this.formData.inactivationOnDate = dateFilter(this.formData.inactivationOnDate, scope.df);
                     }
                     resourceFactory.savingsResource.save(params, this.formData, function (data) {
-                        location.path('/viewsavingaccount/' + data.savingsId);
+                        location.path('/viewgsimaccount/' + scope.parentGSIM.groupId+'/'+scope.parentGSIM.accountNumber);
                     });
                 } else {
-                    params.accountId = scope.accountId;
+                    params.parentAccountId = scope.parentAccountId;
+
                     if (scope.action == "approve") {
+                        params.command='approve';
                         if (this.formData.approvedOnDate) {
                             this.formData.approvedOnDate = dateFilter(this.formData.approvedOnDate, scope.df);
                         }
@@ -287,6 +356,7 @@
                             this.formData.withdrawnOnDate = dateFilter(this.formData.withdrawnOnDate, scope.df);
                         }
                     } else if (scope.action == "reject") {
+                        params.command='reject';
                         if (this.formData.rejectedOnDate) {
                             this.formData.rejectedOnDate = dateFilter(this.formData.rejectedOnDate, scope.df);
                         }
@@ -300,20 +370,21 @@
                             this.formData.dueDate = dateFilter(this.formData.dueDate, scope.df);
                         }
                     } else if (scope.action == "close") {
+
                         if (this.formData.closedOnDate) {
                             this.formData.closedOnDate = dateFilter(this.formData.closedOnDate, scope.df);
 
                         }
                     }
 
-                    resourceFactory.savingsResource.save(params, this.formData, function (data) {
+                    resourceFactory.gsimCommandsResource.save(params, this.formData, function (data) {
                         location.path('/viewsavingaccount/' + data.savingsId);
                     });
                 }
             };
         }
     });
-    mifosX.ng.application.controller('SavingAccountActionsController', ['$scope', 'ResourceFactory', '$location', '$routeParams', 'dateFilter', mifosX.controllers.SavingAccountActionsController]).run(function ($log) {
-        $log.info("SavingAccountActionsController initialized");
+    mifosX.ng.application.controller('GSIMAccountActionsController', ['$scope', 'ResourceFactory', '$location', '$routeParams', 'dateFilter', mifosX.controllers.GSIMAccountActionsController]).run(function ($log) {
+        $log.info("GSIMAccountActionsController initialized");
     });
 }(mifosX.controllers || {}));

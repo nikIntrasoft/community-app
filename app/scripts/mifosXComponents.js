@@ -294,7 +294,14 @@ define(['Q', 'underscore', 'mifosX'], function (Q) {
             'notification/NotificationsController',
             'configurations/AddressFormController',
             'client/EditFamilyMemberController',
-            'client/AddFamilyMembersController'
+            'client/AddFamilyMembersController',
+            'loanAccount/NewGLIMAccountController',
+            'loanAccount/ViewGLIMaccountController',
+            'loanAccount/GLIMLoanAccountActionsController',
+            'savings/CreateGSIMAccountController',
+            'savings/ViewGSIMaccountController',
+            'savings/GSIMAccountActionsController',
+            'savings/EditGSIMAccountController'
 
         ],
         filters: [
