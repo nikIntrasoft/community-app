@@ -84,6 +84,9 @@
                     <th>
                         <tr class="graybg">
                             <th>
+                                {{ 'label.heading.name' | translate }}
+                            </th>
+                            <th>
                                 {{ 'label.heading.accnum' | translate }}
                             </th>
                             <th>
@@ -103,6 +106,11 @@
                     </th>
                     <body>
                     <tr  ng-repeat="childAccounts in gsimAccounts">
+                        <td >
+                            <input  type="text" name="displayName" ng-model="childAccounts.displayName"
+                                    class="form-control" readonly>
+                            <!-- {{childAccounts.parentAccountNo}}-->
+                        </td>
                         <td >
                             <input  type="text" name="accountNo" ng-model="depositArray[$index].accountNo"
                                     class="form-control" readonly>

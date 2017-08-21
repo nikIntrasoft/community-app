@@ -61,6 +61,7 @@
 
              resourceFactory.groupGSIMAccountResource.get({groupId: routeParams.id}, function (data) {
               scope.groupGSIMAccounts = data;
+
              });
             scope.delrole = function (id) {
                 resourceFactory.groupResource.save({groupId: routeParams.id, command: 'unassignRole', roleId: id}, {}, function (data) {

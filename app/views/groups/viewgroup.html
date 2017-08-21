@@ -204,6 +204,7 @@
 										<thead>
 										<tr class="graybg">
 											<th>{{'label.heading.accnum' | translate}}</th>
+											<th>{{'label.heading.product' | translate}}</th>
 											<th>{{'label.heading.loanamount' | translate}}</th>
 
 										</tr>
@@ -211,9 +212,9 @@
 										<body>
 										<tr class="pointer-main" ng-repeat="glimloanaccount in groupGLIMAccounts">
 
-											<td class="pointer" data-ng-click="routeToGLIMLoan(glimloanaccount.accountNumber)">{{glimloanaccount.accountNumber | number}}</td>
-
-											<td class="pointer" data-ng-click="routeToGLIMLoan(glimloanaccount.accountNumber)">{{glimloanaccount.parentPrincipalAmount | number}}</td>
+											<td class="pointer" data-ng-click="routeToGLIMLoan(glimloanaccount.accountNumber)">{{glimloanaccount.accountNumber }}</td>
+                                            <td class="pointer" data-ng-click="routeToGLIMLoan(glimloanaccount.accountNumber)">{{glimloanaccount.childGLIMAccounts[0].productName }}</td>
+											<td class="pointer" data-ng-click="routeToGLIMLoan(glimloanaccount.accountNumber)">{{glimloanaccount.parentPrincipalAmount }}</td>
 
 
 
@@ -236,6 +237,7 @@
 										<thead>
 										<tr class="graybg">
 											<th>{{'label.heading.accnum' | translate}}</th>
+											<th>{{'label.heading.product' | translate}}</th>
 											<th>{{'label.heading.balance' | translate}}</th>
 
 										</tr>
@@ -243,9 +245,9 @@
 										<body>
 										<tr class="pointer-main" ng-repeat="gsimAccount in groupGSIMAccounts">
 
-											<td class="pointer" data-ng-click="routeToGSIMAccount(gsimAccount.accountNumber)">{{gsimAccount.accountNumber | number}}</td>
-
-											<td class="pointer" data-ng-click="routeToGSIMAccount(gsimAccount.accountNumber)">{{gsimAccount.parentBalance | number}}</td>
+											<td class="pointer" data-ng-click="routeToGSIMAccount(gsimAccount.accountNumber)">{{gsimAccount.accountNumber}}</td>
+                                            <td class="pointer" data-ng-click="routeToGSIMAccount(gsimAccount.accountNumber)">{{gsimAccount.childGSIMAccounts[0].productName}}</td>
+                                            <td class="pointer" data-ng-click="routeToGSIMAccount(gsimAccount.accountNumber)">{{gsimAccount.parentBalance}}</td>
 
 
 
